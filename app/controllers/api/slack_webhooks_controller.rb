@@ -2,17 +2,12 @@ module Api
   class SlackWebhooksController < ApiController
 
     def create
-      # if should_get_weather?
-      #   @forecast = DarkSkyService.get_forecast(@time)
-      #   SlackBotService.post_message(message)
-      # end
-      # render json: {}, status: :ok
-      render plain: params[:challenge]
-
-      # respond to lightning emoji, rain emoji, sun emoji
-
-      # respond to golf emoji
-
+      if should_get_weather?
+        @forecast = DarkSkyService.get_forecast(@time)
+        SlackBotService.post_message(message)
+      end
+      render json: {}, status: :ok
+      # render plain: params[:challenge]
     end
 
     private
@@ -29,6 +24,9 @@ module Api
           true
         elsif text.include? 'recommendation'
           @context[:type] = 'recommendation'
+          true
+        elsif text.include? 'quote'
+          @context[:type] = 'quote'
           true
         else
           false

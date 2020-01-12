@@ -1,4 +1,5 @@
 class FormWeatherResponse
+  include ApplicationHelper
 
   def self.call(*args)
     self.new(*args).call
@@ -18,6 +19,8 @@ class FormWeatherResponse
       formatted_time_response('for tomorrow')
     elsif @context[:type] == 'recommendation'
       recommendation_response
+    elsif @context[:type] == 'quote'
+      weather_quotes.sample
     end
   end
 
