@@ -7,7 +7,7 @@ task extreme_weather_change: :environment do
 
   if temp_difference.abs >= Figaro.env.temperature_change_minimum.to_i
     temp_direction = temp_difference > 0 ? 'warmer' : 'colder'
-    message = "Look out! It's going to be so much #{temp_direction} than yesterday!"   
+    message = "<!channel> Look out! It's going to be so much #{temp_direction} than yesterday!"
     SlackBotService.post_message(message)
   end
 end

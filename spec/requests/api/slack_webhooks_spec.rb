@@ -73,6 +73,35 @@ RSpec.describe 'Slack Webhooks endpoints', type: :request do
           subject
         end
       end
+
+      context "when mention includes 'weather advice'" do
+        context "when warm and clear" do
+          before do
+            warm_options = { currently: { temperature: 60, icon: 'clear-day' } }
+            @warm_forecast = dark_sky_weather_response.merge(warm_options)
+            allow(DarkSkyService).to receive(:get_forecast).and_return(
+              @warm_forecast
+            )
+          end
+
+          let(:mention) { "<@US6KWD18B> weather recommendation" }
+
+          subject do
+            post "/api/slack_webhooks",
+              params: slack_bot_mention.merge({ "event" => { "text" => mention } })
+          end
+
+          it "recommends hiking, biking and golf" do
+            expect(SlackBotService).to receive(:post_message).with(
+              FormWeatherResponse.call(
+                forecast: @warm_forecast,
+                context: { type: "recommendation" }
+              )
+            )
+            subject
+          end
+        end
+      end
     end
   end
 end
