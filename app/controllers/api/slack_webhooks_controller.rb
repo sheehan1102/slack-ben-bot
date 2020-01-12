@@ -1,10 +1,14 @@
 module Api
   class SlackWebhooksController < ApiController
+    include ApplicationHelper
 
     def create
+      @text = params[:event][:text].downcase
       if should_get_weather?
         @forecast = DarkSkyService.get_forecast(@time)
         SlackBotService.post_message(message)
+      elsif @text.include? 'quote'
+        SlackBotService.post_message(weather_quotes.sample)
       end
       render json: {}, status: :ok
       # render plain: params[:challenge]
@@ -13,20 +17,16 @@ module Api
     private
 
       def should_get_weather?
-        text = params[:event][:text].downcase
         @context = {}
-        if text.include? 'weather now'
+        if @text.include? 'weather now'
           @context[:time] = 'now'
           true
-        elsif text.include? 'weather tomorrow'
+        elsif @text.include? 'weather tomorrow'
           @time = 1.day.from_now
           @context[:time] = 'tomorrow'
           true
-        elsif text.include? 'recommendation'
+        elsif @text.include? 'recommendation'
           @context[:type] = 'recommendation'
-          true
-        elsif text.include? 'quote'
-          @context[:type] = 'quote'
           true
         else
           false

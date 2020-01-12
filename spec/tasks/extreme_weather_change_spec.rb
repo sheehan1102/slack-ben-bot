@@ -38,7 +38,7 @@ RSpec.describe 'rake extreme_weather_change', type: :task do
 
     it "calls SlackBotService" do
       expect(SlackBotService).to receive(:post_message).with(
-        "Look out! It's going to be so much warmer than yesterday!"
+        "<!channel> Look out! It's going to be so much warmer than yesterday!"
       )
       task.execute
     end
@@ -55,7 +55,7 @@ RSpec.describe 'rake extreme_weather_change', type: :task do
 
     it "calls SlackBotService" do
       expect(SlackBotService).to receive(:post_message).with(
-        "Look out! It's going to be so much colder than yesterday!"
+        "<!channel> Look out! It's going to be so much colder than yesterday!"
       )
       task.execute
     end

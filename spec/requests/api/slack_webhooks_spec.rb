@@ -102,6 +102,27 @@ RSpec.describe 'Slack Webhooks endpoints', type: :request do
           end
         end
       end
+
+      context "when mention includes 'quote'" do
+        let(:mention) { "<@US6KWD18B> quote plz!" }
+
+        subject do
+          post "/api/slack_webhooks",
+            params: slack_bot_mention.merge({ "event" => { "text" => mention } })
+        end
+
+        it "does not call DarkSkyService" do
+          expect(DarkSkyService).not_to receive(:get_forecast)
+          subject
+        end
+
+        it "calls SlackBotService" do
+          expect(SlackBotService).to receive(:post_message).with(
+            an_instance_of(String)
+          )
+          subject
+        end
+      end
     end
   end
 end

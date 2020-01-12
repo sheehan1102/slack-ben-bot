@@ -1,5 +1,4 @@
 class FormWeatherResponse
-  include ApplicationHelper
 
   def self.call(*args)
     self.new(*args).call
