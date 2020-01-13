@@ -11,7 +11,6 @@ module Api
         SlackBotService.post_message(weather_quotes.sample)
       end
       render json: {}, status: :ok
-      # render plain: params[:challenge]
     end
 
     private
