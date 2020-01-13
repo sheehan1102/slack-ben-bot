@@ -25,22 +25,34 @@ class FormWeatherResponse
 
   private
 
+    def description
+      @icon.sub('-day', '').sub('-night', '').sub('-', ' ')
+    end
+
     def formatted_time_response(time)
-      description = @icon.sub('-day', '').sub('-night', '').sub('-', ' ')
       temp = @temperature.to_i
       "The weather #{time} is #{description} and #{temp} degrees."
     end
 
     def recommendation_response
-      if @icon.include?('clear') && @temperature >= 55
-        "It's a lovely day; you should take a hike, a bike, or play golf!"
-      elsif @icon == 'snow'
-        "It's snowing; get out on some skis!"
-      elsif ['rain', 'sleet'].include? @icon
-        "It's nasty out there; good day to be cozy inside!"
-      else
-        "IDK lol; ben-bot can't help you with everything!"
-      end
+      advice = if @icon.include?('clear') && @temperature >= 55
+                "it's a lovely day; you should take a hike, a bike, or play golf!"
+              elsif @icon.include?('clear') && @temperature < 55
+                "bundle up and take a snowshoe; or, if you have no snow, walk the dog and watch the sunrise!"
+              elsif @icon == 'snow'
+                "it's snowing; get out on some skis!"
+              elsif @icon == 'wind'
+                "be careful: you may get blown away out there!"
+              elsif @icon == 'fog'
+                "the setting of many a horror movie..."
+              elsif ['rain', 'sleet'].include? @icon
+                "it's nasty out there; good day to be cozy inside!"
+              elsif @icon == 'cloudy'
+                "at least you won't get burned out there... or will you?"
+              else
+                "IDK lol; ben-bot can't help you with everything!"
+              end
+      "#{description.capitalize}: #{advice}"
     end
 
 end
